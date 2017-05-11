@@ -19,9 +19,11 @@ ASTAssignment::ASTAssignment(std::string variable, ASTExpression* value)
 
 int ASTAssignment::evaluate(std::map<std::string, int>& variables)
 {
-    //TO DO: Impliment this.  Update the variable with the value
+    //TO DO: Implement this.  Update the VARIABLES MAP with the value
     //and return the value as the result
-    return 0;
+	int intValue = _value->evaluate(variables);
+	variables[_variable] = intValue;
+	return intValue;
 }
 
 void ASTAssignment::print(int nestingLevel)
@@ -29,5 +31,5 @@ void ASTAssignment::print(int nestingLevel)
     indent(nestingLevel);
     cout << _variable << " = ";
     _value->print(0);
-    cout << ";";
+    cout << "; ";
 }

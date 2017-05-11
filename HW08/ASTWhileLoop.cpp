@@ -19,10 +19,17 @@ ASTWhileLoop::ASTWhileLoop(ASTExpression* condition, ASTCodeGroup* body)
 int ASTWhileLoop::evaluate(std::map<std::string, int>& variables)
 {
     //TO DO
+	while (_condition->evaluate(variables) != 0) {
+		_body->evaluate(variables);
+	}
     return 0;
 }
 
 void ASTWhileLoop::print(int nestingLevel)
 {
-    //TO DO
+	indent(nestingLevel);
+	cout << "while (";
+	_condition->print(0);
+	cout << ")\n";
+	_body->print(nestingLevel);
 }

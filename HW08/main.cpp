@@ -82,7 +82,7 @@ void testExpressions()
     /*
      * Create the AST for
      *
-     * var = (1 + 3) * (6 - 7);
+     * var = (1 + 2) * (6 - 7);
      * x = 2 * var + 3;
      * y = x + var;
      * y
@@ -98,18 +98,21 @@ void testExpressions()
     ASTExpression x("x");
     ASTExpression y("y");
     
-    //var = (1 + 3) * (6 - 7);
+    //var = (1 + 2) * (6 - 7);
+	//var = -3
     ASTExpression leftAdd(&one, &two, typeAdd);
     ASTExpression rightAdd(&six, &seven, typeSub);
     ASTExpression firstMul(&leftAdd, &rightAdd, typeMul);
     ASTAssignment varAssign("var", &firstMul);
     
     //x = 2 * var + 3;
+	//x = -3
     ASTExpression secondMul = ASTExpression(&two, &var, typeMul);
     ASTExpression secondAdd = ASTExpression(&secondMul, &three, typeAdd);
     ASTAssignment xAssign("x", &secondAdd);
     
     //y = x + var;
+	//y = -6
     ASTExpression lastAdd(&x, &var, typeAdd);
     ASTAssignment yAssign("y", &lastAdd);
     
@@ -204,7 +207,51 @@ void testComplex()
 void testYourExample()
 {
     //You need to come up with an
-    //exampe to test.
+    //example to test.
+	//Might as well test our while loop
+	/*
+	sum = 0;
+	ndx = 1;
+	while (ndx < 6) 
+	{
+		sum = (sum + ndx);
+		ndx = (ndx + 1);
+	}
+	sum;
+	*/
+	ASTExpression varSum("sum");
+	ASTExpression zero(0);
+	ASTAssignment sumAssignZero("sum", &zero);
+
+	ASTExpression ndx("ndx");
+	ASTExpression one(1);
+	ASTAssignment ndxAssignOne("ndx", &one);
+
+	ASTExpression six(6);
+	ASTExpression condition(&ndx, &six, typeLessThan);
+
+	ASTExpression sumPlusNdx(&varSum, &ndx, typeAdd);
+	ASTAssignment assignSumPlusNdxToSum("sum", &sumPlusNdx);
+
+	ASTExpression ndxPlusOne(&ndx, &one, typeAdd);
+	ASTAssignment assignNdxPlusOneToNdx("ndx", &ndxPlusOne);
+
+	ASTCodeGroup whileCodeBlock;
+	whileCodeBlock.addNode(&assignSumPlusNdxToSum);
+	whileCodeBlock.addNode(&assignNdxPlusOneToNdx);
+
+	ASTWhileLoop whileLoop(&condition, &whileCodeBlock);
+
+	ASTCodeGroup funct;
+	funct.addNode(&sumAssignZero);
+	funct.addNode(&whileLoop);
+	funct.addNode(&varSum);
+
+	cout << "----- Test Student Function Summation -----" << endl;
+	funct.print(0);
+	map<string, int> variables;
+	int result = funct.evaluate(variables);
+	cout << "\nsum = " << result << ".\n";
 }
 
 int main(int argc, const char * argv[])

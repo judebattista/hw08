@@ -57,6 +57,7 @@ public:
     
     virtual int evaluate(std::map<std::string, int>& variables);
     virtual void print(int nestingLevel);
+	//Print the operator
 	void printType();
 
     int precedence();
